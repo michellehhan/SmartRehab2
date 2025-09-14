@@ -303,7 +303,7 @@ function App() {
                   <div className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded">
                     <div className="flex items-center">
                       <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                      <span className="text-sm font-medium">Gait Asymmetry</span>
+                      <span className="text-sm font-medium">Biceps Overactivation</span>
                     </div>
                     <span className="text-sm text-yellow-700 dark:text-yellow-300">Moderate</span>
                   </div>
@@ -311,7 +311,7 @@ function App() {
                   <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
                     <div className="flex items-center">
                       <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-                      <span className="text-sm font-medium">Fall Risk</span>
+                      <span className="text-sm font-medium">Triceps Weakness</span>
                     </div>
                     <span className="text-sm text-red-700 dark:text-red-300">High</span>
                   </div>
