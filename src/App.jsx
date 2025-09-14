@@ -293,55 +293,6 @@ function App() {
             </div>
           </div>
 
-          {/* Muscle Activity */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-            <h3 className="text-lg font-semibold mb-4">Elbow-Related Muscle Activity</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-              <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Biceps Brachii</div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                  <div className="bg-blue-500 h-3 rounded-full" style={{width: '72%'}}></div>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Moderate Activity</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Triceps Brachii</div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                  <div className="bg-green-500 h-3 rounded-full" style={{width: '89%'}}></div>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">High Activity</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Brachialis</div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                  <div className="bg-yellow-500 h-3 rounded-full" style={{width: '58%'}}></div>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Moderate Activity</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Brachioradialis</div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                  <div className="bg-orange-500 h-3 rounded-full" style={{width: '67%'}}></div>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Elevated Activity</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Pronator Teres</div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                  <div className="bg-purple-500 h-3 rounded-full" style={{width: '45%'}}></div>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Normal Activity</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Supinator</div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                  <div className="bg-indigo-500 h-3 rounded-full" style={{width: '52%'}}></div>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Normal Activity</div>
-              </div>
-            </div>
-          </div>
-
           {/* Risk Assessment & Alerts */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold mb-4">Risk Assessment & Early Warnings</h3>
