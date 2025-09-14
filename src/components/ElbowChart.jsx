@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ReferenceLine } from 'recharts'
 import Papa from 'papaparse'
 
-const ElbowChart = () => {
+const ElbowChart = ({ errorRange = 30, smoothing = 70, showGuides = true }) => {
   const [healthyData, setHealthyData] = useState([])
   const [sarcData, setSarcData] = useState([])
   const [exoData, setExoData] = useState([])
@@ -73,6 +73,28 @@ const ElbowChart = () => {
     loadCSVFiles()
   }, [])
 
+  // Smoothing helpers
+  const smoothSeries = (data, key, windowSize) => {
+    if (!Array.isArray(data) || windowSize <= 1) return data
+    const out = [...data]
+    for (let i = 0; i < data.length; i++) {
+      let sum = 0, count = 0
+      for (let j = Math.max(0, i - windowSize + 1); j <= i; j++) {
+        const v = data[j]?.[key]
+        if (v !== null && v !== undefined && !Number.isNaN(v)) {
+          sum += v
+          count++
+        }
+      }
+      out[i] = { ...data[i], [key]: count ? sum / count : null }
+    }
+    return out
+  }
+
+  // Map single smoothing slider to window sizes
+  const torqueWindow = Math.max(1, Math.round(((smoothing - 10) / 40) * 20)) // 1..20 for smoothing 10..50
+  const emgWindow = Math.max(1, Math.round(((smoothing - 10) / 40) * 15))   // 1..15
+
   const renderChart = () => {
     if (healthyData.length === 0 && sarcData.length === 0 && exoData.length === 0) return null
 
@@ -81,12 +103,15 @@ const ElbowChart = () => {
 
     switch (chartType) {
       case 'torque-comparison':
-        const combinedData = Array.from({ length: maxLength }, (_, i) => ({
+        let combinedData = Array.from({ length: maxLength }, (_, i) => ({
           time: i * 0.01,
           healthyTorque: healthyData[i]?.torque || null,
           sarcTorque: sarcData[i]?.torque || null,
           exoTorque: exoData[i]?.torque || null
         }))
+        combinedData = smoothSeries(combinedData, 'healthyTorque', torqueWindow)
+        combinedData = smoothSeries(combinedData, 'sarcTorque', torqueWindow)
+        combinedData = smoothSeries(combinedData, 'exoTorque', torqueWindow)
 
         return (
           <ResponsiveContainer width="100%" height={400}>
@@ -107,6 +132,7 @@ const ElbowChart = () => {
                 labelFormatter={(value) => `Time: ${value}s`}
               />
               <Legend wrapperStyle={{ paddingTop: '20px' }} />
+              {showGuides && <ReferenceLine y={0} stroke="#9ca3af" strokeDasharray="3 3" />}
               <Line 
                 type="monotone" 
                 dataKey="exoTorque" 
@@ -155,6 +181,7 @@ const ElbowChart = () => {
                 label={{ value: 'Episode Time t (seconds)', position: 'insideBottom', offset: -20 }}
               />
               <YAxis 
+                domain={[-errorRange, errorRange]}
                 label={{ value: 'Joint Angle Error (rad)', angle: -90, position: 'insideLeft' }}
               />
               <Tooltip 
@@ -165,6 +192,12 @@ const ElbowChart = () => {
                 labelFormatter={(value) => `Time: ${value}s`}
               />
               <Legend wrapperStyle={{ paddingTop: '20px' }} />
+              {showGuides && (
+                <>
+                  <ReferenceLine y={errorRange} stroke="#ef4444" strokeDasharray="4 4" />
+                  <ReferenceLine y={-errorRange} stroke="#ef4444" strokeDasharray="4 4" />
+                </>
+              )}
               <Line 
                 type="monotone" 
                 dataKey="exoError" 
@@ -197,12 +230,15 @@ const ElbowChart = () => {
         )
 
       case 'energy-comparison':
-        const combinedEnergyData = Array.from({ length: maxLength }, (_, i) => ({
+        let combinedEnergyData = Array.from({ length: maxLength }, (_, i) => ({
           time: i * 0.01,
           healthyMuscle: healthyData[i]?.muscleEnergy || null,
           sarcMuscle: sarcData[i]?.muscleEnergy || null,
           exoMuscle: exoData[i]?.muscleEnergy || null
         }))
+        combinedEnergyData = smoothSeries(combinedEnergyData, 'healthyMuscle', emgWindow)
+        combinedEnergyData = smoothSeries(combinedEnergyData, 'sarcMuscle', emgWindow)
+        combinedEnergyData = smoothSeries(combinedEnergyData, 'exoMuscle', emgWindow)
 
         return (
           <ResponsiveContainer width="100%" height={400}>
@@ -223,6 +259,7 @@ const ElbowChart = () => {
                 labelFormatter={(value) => `Time: ${value}s`}
               />
               <Legend wrapperStyle={{ paddingTop: '20px' }} />
+              {showGuides && <ReferenceLine y={0} stroke="#9ca3af" strokeDasharray="3 3" />}
               <Line 
                 type="monotone" 
                 dataKey="exoMuscle" 
@@ -289,10 +326,10 @@ const ElbowChart = () => {
       </h2>
       
       {/* Chart Type Selector */}
-      <div className="mb-8 flex flex-wrap gap-4">
+      <div className="mb-4 flex items-center gap-2 flex-nowrap">
         <button
           onClick={() => setChartType('torque-comparison')}
-          className={`px-6 py-3 rounded text-base tracking-wide ${
+          className={`px-3 py-1.5 rounded-md text-sm ${
             chartType === 'torque-comparison'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -302,7 +339,7 @@ const ElbowChart = () => {
         </button>
         <button
           onClick={() => setChartType('angle-error')}
-          className={`px-6 py-3 rounded text-base tracking-wide ${
+          className={`px-3 py-1.5 rounded-md text-sm ${
             chartType === 'angle-error'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -312,7 +349,7 @@ const ElbowChart = () => {
         </button>
         <button
           onClick={() => setChartType('energy-comparison')}
-          className={`px-6 py-3 rounded text-base tracking-wide ${
+          className={`px-3 py-1.5 rounded-md text-sm ${
             chartType === 'energy-comparison'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'

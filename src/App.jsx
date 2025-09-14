@@ -4,6 +4,10 @@ import ElbowChart from './components/ElbowChart'
 function App() {
   const [darkMode, setDarkMode] = useState(false)
   const [currentPage, setCurrentPage] = useState('dashboard')
+  const [trackingView, setTrackingView] = useState('torque')
+  const [errorRange, setErrorRange] = useState(30)
+  const [smoothing, setSmoothing] = useState(70)
+  const [showGuides, setShowGuides] = useState(true)
 
   const metrics = {
     elbowFlexion: 78,
@@ -22,7 +26,7 @@ function App() {
       <header className="border-b bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex h-16 items-center px-6">
           <div className="flex items-center space-x-3">
-            <div className="h-6 w-6 bg-green-600 rounded"></div>
+            <img src="/logo2.png" alt="SmartRehab logo" className="h-12 w-13 rounded object-contain" />
             <h1 className="text-xl font-bold">SmartRehab</h1>
           </div>
 
@@ -47,6 +51,16 @@ function App() {
                 }`}
               >
                 Impact & Purpose
+              </button>
+              <button
+                onClick={() => setCurrentPage('technology')}
+                className={`px-4 py-2 rounded-md text-base font-medium ${
+                  currentPage === 'technology'
+                    ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                Technology
               </button>
             </nav>
             
@@ -111,62 +125,74 @@ function App() {
             </div>
           </div>
 
-          {/* Movement Visualization */}
+          {/* Movement Visualization + Chart */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Elbow Movement Tracking</h3>
-              <div className="h-64 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
-                <div className="text-center">
-                  {/* Simplified arm representation focused on elbow */}
-                  <div className="flex items-center justify-center">
-                    {/* Upper arm */}
-                    <div className="w-20 h-6 bg-blue-500 rounded-l-full"></div>
-                    {/* Elbow joint - highlighted */}
-                    <div className="w-8 h-8 bg-red-500 rounded-full border-4 border-yellow-400"></div>
-                    {/* Forearm */}
-                    <div className="w-20 h-6 bg-green-500 rounded-r-full"></div>
-                  </div>
-                  <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                    Elbow Joint Focus
-                  </div>
-                </div>
+              <div className="flex flex-col gap-4">
+              <h3 className="text-lg font-semibold">Elbow Movement Simulation</h3>
+              <div className="flex items-center gap-2 flex-nowrap">
+                <button
+                  onClick={() => setTrackingView('torque')}
+                  className={`px-3 py-1.5 rounded-md text-sm ${
+                    trackingView === 'torque'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  Exoskeleton 10.0
+                </button>
+                <button
+                  onClick={() => setTrackingView('angle')}
+                  className={`px-3 py-1.5 rounded-md text-sm ${
+                    trackingView === 'angle'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  Exoskeleton 11.0
+                </button>
+                <button
+                  onClick={() => setTrackingView('energy')}
+                  className={`px-3 py-1.5 rounded-md text-sm ${
+                    trackingView === 'energy'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  Exoskeleton 11.5
+                </button>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <div className="text-gray-600 dark:text-gray-400">Biceps Activity</div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div className="bg-blue-500 h-2 rounded-full" style={{width: `${metrics.bicepsActivity}%`}}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-gray-600 dark:text-gray-400">Triceps Activity</div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{width: `${metrics.tricepsActivity}%`}}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-gray-600 dark:text-gray-400">Forearm Stability</div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div className="bg-yellow-500 h-2 rounded-full" style={{width: `${metrics.forearmStability}%`}}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-gray-600 dark:text-gray-400">Joint Mobility</div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div className="bg-red-500 h-2 rounded-full" style={{width: `${metrics.jointMobility}%`}}></div>
-                  </div>
-                </div>
+              <video
+                key={trackingView}
+                className="w-full h-80 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+                src={{
+                  torque: '/10.mp4',
+                  angle: '/11.mp4',
+                  energy: '/11.5.mp4'
+                }[trackingView]}
+              >
+                Your browser does not support the video tag.
+              </video>
               </div>
             </div>
 
+            {/* Elbow Movement Tracking Chart */
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+              <ElbowChart 
+                errorRange={errorRange}
+                smoothing={smoothing}
+                showGuides={showGuides}
+              />
+            </div>
+}
           </div>
 
-          {/* Elbow Movement Tracking and Exercise Recommendations */}
+          {/* Exercise Recommendations and Session History */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Elbow Movement Tracking */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-              <ElbowChart />
-            </div>
 
             {/* Exercise Recommendations */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -379,73 +405,90 @@ function App() {
 
         {/* Right Sidebar */}
         <aside className="hidden xl:block w-72 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold mb-4">Threshold Controls</h3>
+          <h3 className="text-lg font-semibold mb-4">Signal & Threshold Controls</h3>
           
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Gait Deviation Tolerance</label>
+              <label className="block text-sm font-medium mb-2">Angle Error Range (±units)</label>
               <input 
                 type="range" 
-                min="5" 
-                max="50" 
-                defaultValue="15"
+                min="10" 
+                max="100" 
+                value={errorRange}
+                onChange={(e) => setErrorRange(Number(e.target.value))}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>5%</span>
-                <span>50%</span>
+                <span>±10</span>
+                <span>±{errorRange}</span>
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">EMG Noise Sensitivity</label>
+              <label className="block text-sm font-medium mb-2">Smoothing (torque & energy)</label>
               <input 
                 type="range" 
                 min="10" 
                 max="50" 
-                defaultValue="25"
+                value={smoothing}
+                onChange={(e) => setSmoothing(Number(e.target.value))}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>10%</span>
-                <span>50%</span>
+                <span>{smoothing}%</span>
               </div>
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Movement Smoothness</label>
-              <input 
-                type="range" 
-                min="50" 
-                max="95" 
-                defaultValue="70"
-                className="w-full"
+
+            <div className="flex items-center justify-between pt-2">
+              <label className="text-sm font-medium">Show Guide Lines</label>
+              <input
+                type="checkbox"
+                checked={showGuides}
+                onChange={(e) => setShowGuides(e.target.checked)}
+                className="h-4 w-4"
               />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>50%</span>
-                <span>95%</span>
-              </div>
             </div>
           </div>
           
           <div className="mt-8 space-y-3">
-            <button className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">
+            <button className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+              onClick={() => {
+                // placeholder: could persist settings
+              }}
+            >
               Save Settings
             </button>
             <div className="grid grid-cols-2 gap-2">
-              <button className="py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700">
+              <button 
+                className="py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                onClick={() => {
+                  setErrorRange(30)
+                  setSmoothing(70)
+                  setShowGuides(true)
+                }}
+              >
                 Reset
               </button>
-              <button className="py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700">
+              <button 
+                className="py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                onClick={() => {
+                  setErrorRange(40)
+                  setSmoothing(80)
+                  setShowGuides(true)
+                }}
+              >
                 Use Norms
               </button>
             </div>
           </div>
         </aside>
         </div>
-      ) : (
+      ) : currentPage === 'impacts' ? (
         <ImpactsPage />
-      )}
+      ) : currentPage === 'technology' ? (
+        <TechnologyPage />
+      ) : null}
     </div>
   )
 }
@@ -457,11 +500,10 @@ function ImpactsPage() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-            Transforming Neuromuscular Health Through AI
+            Redefining Rehabilitation with AI-Powered Support
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            SmartRehab leverages cutting-edge artificial intelligence to provide real-time monitoring, 
-            early detection, and personalized rehabilitation for individuals with neuromuscular conditions.
+            SmartRehab combines advanced biomechanics, AI-driven analysis, and continuous monitoring to transform how neuromuscular conditions are managed, which helps patients recover faster, clinicians make data-driven decisions, and healthcare systems reduce costs.
           </p>
         </div>
 
@@ -469,15 +511,15 @@ function ImpactsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
             <div className="text-3xl font-bold text-green-600 mb-2">85%</div>
-            <div className="text-gray-600 dark:text-gray-300">Improvement in early detection of movement disorders</div>
+            <div className="text-gray-600 dark:text-gray-300">Increase in precision and speed of detecting early motor impairments.</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">60%</div>
-            <div className="text-gray-600 dark:text-gray-300">Reduction in rehabilitation time with personalized therapy</div>
+            <div className="text-gray-600 dark:text-gray-300">Reduction in overall rehabilitation duration through adaptive therapy.</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
             <div className="text-3xl font-bold text-purple-600 mb-2">92%</div>
-            <div className="text-gray-600 dark:text-gray-300">Patient satisfaction with continuous monitoring</div>
+            <div className="text-gray-600 dark:text-gray-300">Sustained patient engagement and confidence through 24/7 personalized feedback.</div>
           </div>
         </div>
 
@@ -494,7 +536,7 @@ function ImpactsPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Early Detection</h3>
-                  <p className="text-gray-600 dark:text-gray-300">Identify movement abnormalities before they become severe, enabling proactive intervention.</p>
+                  <p className="text-gray-600 dark:text-gray-300">Spot early deviations in muscle activity and movement, preventing severe decline and enabling proactive care.</p>
                 </div>
               </div>
               
@@ -506,7 +548,7 @@ function ImpactsPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Personalized Therapy</h3>
-                  <p className="text-gray-600 dark:text-gray-300">AI-driven recommendations adapt to individual patient needs and progress.</p>
+                  <p className="text-gray-600 dark:text-gray-300">Adaptive, AI-guided plans that evolve with the patient’s progress and clinical needs.</p>
                 </div>
               </div>
               
@@ -518,7 +560,7 @@ function ImpactsPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Continuous Monitoring</h3>
-                  <p className="text-gray-600 dark:text-gray-300">24/7 tracking provides comprehensive insights into patient progress and setbacks.</p>
+                  <p className="text-gray-600 dark:text-gray-300">Always-on insights that track subtle progressions, relapses, and improvements in real-world settings.</p>
                 </div>
               </div>
             </div>
@@ -530,19 +572,19 @@ function ImpactsPage() {
               <div className="space-y-4">
                 <div className="border-l-4 border-green-500 pl-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white">Parkinson's Disease</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Monitor tremors, gait instability, and movement patterns</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Track tremor frequency, gait stability, and fine motor control.</p>
                 </div>
                 <div className="border-l-4 border-blue-500 pl-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white">Stroke Recovery</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Track rehabilitation progress and muscle reactivation</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Support targeted neuro-muscular reactivation and measure therapy effectiveness.</p>
                 </div>
                 <div className="border-l-4 border-purple-500 pl-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white">Muscular Dystrophy</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Assess muscle weakness progression and compensation patterns</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Monitor progression of weakness while guiding compensatory strategies.</p>
                 </div>
                 <div className="border-l-4 border-yellow-500 pl-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white">Spinal Cord Injuries</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Monitor recovery and adaptive movement strategies</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Provide adaptive support for regaining function and independence.</p>
                 </div>
               </div>
             </div>
@@ -560,7 +602,7 @@ function ImpactsPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Data Collection</h3>
-              <p className="text-gray-600 dark:text-gray-300">EMG sensors and motion capture collect real-time movement data</p>
+              <p className="text-gray-600 dark:text-gray-300">Wearable EMG sensors and motion capture collect rich, real-time muscle and joint data.</p>
             </div>
             
             <div className="text-center">
@@ -570,7 +612,7 @@ function ImpactsPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">AI Analysis</h3>
-              <p className="text-gray-600 dark:text-gray-300">Machine learning algorithms analyze patterns and detect anomalies</p>
+              <p className="text-gray-600 dark:text-gray-300">Reinforcement learning and predictive models analyze movement patterns against healthy baselines.</p>
             </div>
             
             <div className="text-center">
@@ -580,7 +622,7 @@ function ImpactsPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Actionable Insights</h3>
-              <p className="text-gray-600 dark:text-gray-300">Personalized recommendations and alerts delivered in real-time</p>
+              <p className="text-gray-600 dark:text-gray-300">Deliver tailored therapy plans, adaptive device settings, and early warning alerts instantly.</p>
             </div>
           </div>
         </div>
@@ -588,19 +630,26 @@ function ImpactsPage() {
         {/* Call to Action */}
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Empowering Better Health Outcomes
+            Driving Accessible, Scalable, and Personalized Rehabilitation
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join the future of neuromuscular health monitoring. SmartRehab is transforming lives through 
-            intelligent, compassionate, and personalized care.
+            SmartRehab aims to shape a future where advanced rehabilitation is accessible to all. Click below to explore how we make this happen.
           </p>
           <div className="flex justify-center space-x-4">
-            <button className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium">
+            <a
+              href="https://docs.google.com/presentation/d/e/2PACX-1vTDczIVmN10Df_3yLaa4BQAnkpcenMpSPc7sUO7t6mkL8EZnuDWbrwMcfmIZwUzrpw1urPOWIa3SXpl/pub?start=false&loop=false&delayms=3000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium inline-flex items-center justify-center"
+            >
               Learn More
-            </button>
-            <button className="border border-green-600 text-green-600 dark:text-green-400 px-6 py-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900 font-medium">
+            </a>
+            <a
+              href="mailto:help@hackmit.org"
+              className="border border-green-600 text-green-600 dark:text-green-400 px-6 py-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-900 font-medium inline-flex items-center justify-center"
+            >
               Contact Us
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -609,3 +658,125 @@ function ImpactsPage() {
 }
 
 export default App
+
+// --- TechnologyPage Component ---
+function TechnologyPage() {
+  // Carousel state
+  const [carouselIdx, setCarouselIdx] = React.useState(0)
+  const carouselSlides = [
+    {
+      img: '/images/torque-graph.png',
+      caption: 'Real-time Torque Feedback Graph'
+    },
+    {
+      img: '/images/training-curve.png',
+      caption: 'AI Training Progress Curves'
+    },
+    {
+      img: '/images/patient-ui.png',
+      caption: 'Patient Adaptive Interface'
+    }
+  ]
+
+  // Helper for carousel
+  const prevSlide = () => setCarouselIdx(idx => (idx === 0 ? carouselSlides.length - 1 : idx - 1))
+  const nextSlide = () => setCarouselIdx(idx => (idx === carouselSlides.length - 1 ? 0 : idx + 1))
+
+  return (
+    <div className="min-h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <div className="flex flex-col items-center text-center mb-16">
+          <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 dark:bg-green-900 shadow mb-4">
+            {/* Icon: Brain/Chip SVG or emoji */}
+            <span className="text-4xl" role="img" aria-label="chip">🧠</span>
+          </div>
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
+            Cutting-Edge Technology &amp; Novel Developments
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
+            SmartRehab leverages advanced AI, biomechanics, and physics-based simulation to deliver adaptive, real-time rehabilitation. Our platform fuses deep reinforcement learning with wearable sensors and exoskeleton control, offering scalable, personalized therapy for every patient.
+          </p>
+        </div>
+
+        {/* Grid of Innovations */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Key Innovations</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            {/* Physics-Based Simulation */}
+            <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
+                <img src="/icons/physics.png" alt="Physics Simulation" className="w-8 h-8" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Physics-Based Simulation</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">Biomechanical modeling and real-time simulation enable safe, effective therapy in virtual and real worlds.</p>
+            </div>
+            {/* Deep Reinforcement Learning */}
+            <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                <img src="/icons/rl.png" alt="Deep RL" className="w-8 h-8" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Deep Reinforcement Learning</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">AI agents learn optimal therapy strategies, adapting to patient progress and maximizing outcomes.</p>
+            </div>
+            {/* Adaptive Exoskeleton Control */}
+            <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
+              <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-4">
+                <img src="/icons/exosk.png" alt="Exoskeleton Control" className="w-8 h-8" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Adaptive Exoskeleton Control</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">Robust control algorithms deliver smooth, safe, and responsive assistance for every movement.</p>
+            </div>
+            {/* Real-Time EMG Sensing */}
+            <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
+              <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mb-4">
+                <img src="/icons/emg.png" alt="EMG Sensing" className="w-8 h-8" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Real-Time EMG Sensing</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">Wearable sensors capture muscle signals, providing instant feedback and precise tracking.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Side-by-side Panels: Traditional vs SmartRehab */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Why SmartRehab is Different</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Traditional */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 flex flex-col relative">
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <img src="/icons/trexo.png" alt="Traditional System (e.g., Trexo Robotics)" className="w-64 h-64 object-contain rounded-2xl mx-auto" />
+                <h3 className="font-semibold text-gray-900 dark:text-white text-2xl">Traditional Systems</h3>
+              </div>
+              <ul className="text-gray-600 dark:text-gray-300 text-base space-y-2 mb-4">
+                <li>
+                  ⚪ Static, pre-set routines (e.g., <a href="https://www.ycombinator.com/companies/trexo-robotics" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Trexo Robotics YC 14</a>)
+                </li>
+                <li>⚪ Manual device adjustments</li>
+                <li>⚪ High operational costs</li>
+                <li>⚪ Limited personalization</li>
+              </ul>
+              <span className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-sm text-gray-700 dark:text-gray-200 self-start">Manual &amp; Rigid</span>
+            </div>
+            {/* SmartRehab */}
+            <div className="bg-green-50 dark:bg-green-900/30 rounded-xl shadow-lg p-8 flex flex-col border-2 border-green-400 dark:border-green-700 relative">
+              <div className="flex items-center gap-4 mb-6">
+                <img src="/logo2.png" alt="SmartRehab System" className="w-56 h-56 object-contain" />
+                <h3 className="font-semibold text-green-700 dark:text-green-300 text-2xl">SmartRehab</h3>
+              </div>
+              <ul className="text-green-800 dark:text-green-200 text-base space-y-2 mb-4">
+                <li>🟢 Adaptive, AI-driven plans</li>
+                <li>🟢 Automatic device control</li>
+                <li>🟢 Scalable &amp; cost-effective</li>
+                <li>🟢 Personalized, real-time feedback</li>
+              </ul>
+              <span className="px-3 py-1 bg-green-600 text-white rounded-full text-sm self-start">Intelligent &amp; Adaptive</span>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  )
+}
