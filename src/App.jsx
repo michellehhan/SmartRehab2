@@ -278,7 +278,7 @@ function App() {
                   </div>
                 </div>
                 
-                <div className="mt-4 p-4 border border-gray-200 dark:border-gray-600 rounded">
+                <div className="mt-1 p-4 border border-gray-200 dark:border-gray-600 rounded">
                   <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">Weekly Progress</div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-300">Sessions Completed</span>
@@ -489,6 +489,11 @@ function App() {
       ) : currentPage === 'technology' ? (
         <TechnologyPage />
       ) : null}
+
+      {/* Global Footer */}
+      <footer className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center py-4 border-t border-gray-200 dark:border-gray-700 mt-4">
+        Made with ♡ @ HackMIT • Inspired by Trexo (YC 14) • Powered by Windsurf <i className="fa-solid fa-water" aria-hidden="true"></i>
+      </footer>
     </div>
   )
 }
@@ -706,7 +711,7 @@ function TechnologyPage() {
             {/* Physics-Based Simulation */}
             <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
-                <img src="/icons/physics.png" alt="Physics Simulation" className="w-8 h-8" />
+                <img src="/public/physics.png" alt="Physics Simulation" className="w-8 h-8" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Physics-Based Simulation</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 text-center">Biomechanical modeling and real-time simulation enable safe, effective therapy in virtual and real worlds.</p>
@@ -714,7 +719,7 @@ function TechnologyPage() {
             {/* Deep Reinforcement Learning */}
             <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
               <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
-                <img src="/icons/rl.png" alt="Deep RL" className="w-8 h-8" />
+                <img src="/public/rl.png" alt="Deep RL" className="w-8 h-8" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Deep Reinforcement Learning</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 text-center">AI agents learn optimal therapy strategies, adapting to patient progress and maximizing outcomes.</p>
@@ -722,7 +727,7 @@ function TechnologyPage() {
             {/* Adaptive Exoskeleton Control */}
             <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
               <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-4">
-                <img src="/icons/exosk.png" alt="Exoskeleton Control" className="w-8 h-8" />
+                <img src="/public/exosk.png" alt="Exoskeleton Control" className="w-8 h-8" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Adaptive Exoskeleton Control</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 text-center">Robust control algorithms deliver smooth, safe, and responsive assistance for every movement.</p>
@@ -730,7 +735,7 @@ function TechnologyPage() {
             {/* Real-Time EMG Sensing */}
             <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer">
               <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mb-4">
-                <img src="/icons/emg.png" alt="EMG Sensing" className="w-8 h-8" />
+                <img src="/public/emg.png" alt="EMG Sensing" className="w-8 h-8" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Real-Time EMG Sensing</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 text-center">Wearable sensors capture muscle signals, providing instant feedback and precise tracking.</p>
@@ -745,7 +750,7 @@ function TechnologyPage() {
             {/* Traditional */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 flex flex-col relative">
               <div className="flex flex-col items-center gap-4 mb-6">
-                <img src="/icons/trexo.png" alt="Traditional System (e.g., Trexo Robotics)" className="w-64 h-64 object-contain rounded-2xl mx-auto" />
+                <img src="/public/trexo.png" alt="Traditional System (e.g., Trexo Robotics)" className="w-64 h-64 object-contain rounded-2xl mx-auto" />
                 <h3 className="font-semibold text-gray-900 dark:text-white text-2xl">Traditional Systems</h3>
               </div>
               <ul className="text-gray-600 dark:text-gray-300 text-base space-y-2 mb-4">
@@ -760,7 +765,7 @@ function TechnologyPage() {
             </div>
             {/* SmartRehab */}
             <div className="bg-green-50 dark:bg-green-900/30 rounded-xl shadow-lg p-8 flex flex-col border-2 border-green-400 dark:border-green-700 relative">
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex flex-col items-center gap-4 mb-6">
                 <img src="/logo2.png" alt="SmartRehab System" className="w-56 h-56 object-contain" />
                 <h3 className="font-semibold text-green-700 dark:text-green-300 text-2xl">SmartRehab</h3>
               </div>
